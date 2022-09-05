@@ -3,7 +3,6 @@
 require_relative 'node'
 
 # In this class is the balanced tree building logic and methods
-
 class Tree
   attr_accessor :data, :root
 
@@ -11,7 +10,6 @@ class Tree
     @data = array.uniq.sort
     p data
     @root = build_tree(data)
-  
   end
 
   def build_tree(array)
@@ -32,7 +30,6 @@ class Tree
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 
-  
   def insert(value, node = root)
     return nil if value == node.data
 
@@ -69,4 +66,60 @@ class Tree
     node = node.left until node.left.nil?
     node
   end
+
+  def find(value, node = root)
+    return node if node.nil?
+
+    if value < node.data
+      node.left = find(value, node.left)
+
+    elsif value > node.data
+      node.right = find(value, node.right)
+    else 
+      node
+    end
+  end
+
+  def level_order(node = root, queue = [])
+    return node if node.nil?
+    queue.push(node)
+    while !queue.empty?
+      node = queue[0]
+      if !node.left.nil? 
+        queue.push(node.left)
+      end
+      if !node.right.nil? 
+        queue.push(node.right)
+      end
+        puts "Node data is #{node.data}"
+      queue.shift
+    end
+  end
+
+  def preorder(node = root)
+    # <root><left><right>
+    return nil if node.nil?
+    puts "#{node.data}"
+    preorder(node.left)
+    preorder(node.right)
+  end
+
+  def inorder (node = root)
+    # <left><root><right>
+    return nil if node.nil?
+
+    inorder(node.left)
+    puts "#{node.data}"
+    inorder(node.right)
+  end
+
+  def postorder(node = root)
+    # <left><right><root>
+    return nil if node.nil?
+
+    postorder(node.left)
+    postorder(node.right)
+    puts "#{node.data}"
+  end
+
 end
