@@ -122,4 +122,57 @@ class Tree
     puts "#{node.data}"
   end
 
+
+  def height(node = root)
+    # Height is defined as the number of edges 
+    # in longest path from a given node to a leaf node.
+    return -1 if node.nil?
+
+    [height(node.left), height(node.right)].max + 1
+  end
+
+  def depth(node = root, parent = root, edges = 0)
+    # Depth is defined as the number of edges 
+    # in path from a given node to the tree’s root node.
+    return 0 if node == parent
+    return -1 if parent.nil?
+
+    if node < parent.data
+      edges += 1
+      depth(node, parent.left, edges)
+    elsif node > parent.data
+      edges += 1
+      depth(node, parent.right, edges)
+    else
+      edges
+    end
+  end
+  
+  def balanced?(node = root)
+    return true if node.nil?
+
+    left_height = height(node.left)
+    right_height = height(node.right)
+
+    return true if (left_height - right_height).abs <= 1 && balanced?(node.left) && balanced?(node.right)
+
+    false
+  end
+
+  def inorder_array(node = root, array = [])
+    unless node.nil?
+      inorder_array(node.left, array)
+      array << node.data
+      inorder_array(node.right, array)
+    end
+    array
+  end
+
+  def rebalance
+    self.data = inorder_array
+    self.root = build_tree(data)
+  end
+
+
+
 end
